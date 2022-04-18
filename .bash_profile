@@ -8,7 +8,7 @@ unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
 
 # TERMINAL BEAUTIFICATION
 
-ACCENT_COL="\[$(tput setaf 166)\]"
+ACCENT_COL="\[$(tput setaf 215)\]"
 TEXT_COL1="\[$(tput setaf 249)\]"
 RESET_COL="\[$(tput sgr0)\]"
 
@@ -21,6 +21,9 @@ if [[ "$TERM" =~ 256color ]]; then
 fi
 
 #  ALIASES
+
+alias ll="ls -al"
+alias cl="clear"
 
 # Nimble Specific
 alias li_pebble="package.pl --op list --branch=default --date --verbose"
