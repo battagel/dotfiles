@@ -2,7 +2,7 @@
 
 # ENVIRONMENT VARIABLES
 export PATH=/auto/share/bin:~/.local/bin:$PATH
-export TERM=xterm-256color
+export TERM=xterm-256color-italic
 export PYTHONPATH=:/auto/share/repo/cfl.latest/lib/:/auto/share/repo/zeus.latest/infra/lib/:/auto/share/repo/zeus.latest/infra
 unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
 
@@ -19,6 +19,8 @@ fi
 if [[ "$TERM" =~ 256color ]]; then
     PS1="${TEXT_COL1}\u${RESET_COL}@${ACCENT_COL}\h${RESET_COL}:${TEXT_COL1}\w${RESET_COL}>"
 fi
+
+echo -ne "\e]12;white\a"
 
 #  ALIASES
 

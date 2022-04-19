@@ -22,10 +22,11 @@ Plugin 'junegunn/fzf.vim'
 
 Plugin 'neoclide/coc.nvim', { 'branch': 'release'}
 
+Plugin 'sheerun/vim-polyglot'
 " Plugin 'mattn/emmet-vim' not currently needed
 Plugin 'frazrepo/vim-rainbow'
 " Plugin 'tabnine/YouCompleteMe' Maybe doesnt work?
-" Plugin 'dense-analysis/ale'
+Plugin 'dense-analysis/ale'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'airblade/vim-gitgutter'
 " Plugin 'chrisoomey/vim-tmux-navigator'
@@ -72,10 +73,17 @@ colorscheme sonokai
 hi Normal guibg=NONE ctermbg=NONE
 set termguicolors
 
+let g:sonokai_disable_italic_comment=1
+
+set backspace=indent,eol,start
+
 " Line numbers on
 set number
 " Bell notification off
 set belloff=all
+
+" Turn on syntax highlighting
+syntax on
 
 " Tab navigation
 nnoremap H :tabprevious<CR>
@@ -105,7 +113,7 @@ let NERDTreeShowHidden=1
 let NERDTreeAutoDeleteBuffer = 1
 
 " Tagbar
-nnoremap <silent> <C-a> :TagbarToggle<CR>
+nnoremap <silent> <C-s> :TagbarToggle<CR>
 
 " Airline
 let g:airline_powerline_fonts=1
@@ -119,8 +127,8 @@ let g:coc_disable_startup_warning = 1
 " Run :CocInstall <package> to install new language support
 " Run :CocList to view packages
 
-
-"let g:rainbow_active = 1
+" Rainbow brackets
+let g:rainbow_active = 1
 
 " Status Line
 " set statusline+=%#warningmsg#
@@ -138,18 +146,18 @@ let g:syntastic_python_python_exec = 'python3'
 
 " This will highlight bad white space live when coding - Kinda annoying
 " highlight BadWhitespace ctermbg=red guibg=red
-au BufNewFile,BufRead *.py
-    \ set tabstop=4 |
-
-    \ set softtabstop=4 |
-    \ set shiftwidth=4 |
-    \ set textwidth=79 |
-    \ set expandtab |
-    \ set autoindent |
-    \ set fileformat=unix
-au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.py,*.pyw, set textwidth=100
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+"au BufNewFile,BufRead *.py
+"    \ set tabstop=4 |
+"
+"    \ set softtabstop=4 |
+"    \ set shiftwidth=4 |
+"    \ set textwidth=79 |
+"    \ set expandtab |
+"    \ set autoindent |
+"    \ set fileformat=unix
+"au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
+"au BufRead,BufNewFile *.py,*.pyw, set textwidth=100
+"au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 
 let python_highlight_all=1
 
