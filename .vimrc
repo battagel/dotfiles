@@ -15,6 +15,7 @@ Plugin 'preservim/nerdtree'
 Plugin 'preservim/tagbar'
 Plugin 'preservim/nerdcommenter' "Use gcc to comment lines
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -29,8 +30,15 @@ Plugin 'frazrepo/vim-rainbow'
 Plugin 'dense-analysis/ale'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'airblade/vim-gitgutter'
-" Plugin 'chrisoomey/vim-tmux-navigator'
-Plugin 'prettier/vim-prettier', {'do': 'yum install' }
+Plugin 'christoomey/vim-tmux-navigator'
+" Has to load after most plugins
+Plugin 'ryanoasis/vim-devicons'
+" Plugin 'prettier/vim-prettier', {'do': 'yum install' }
+
+" Python specific
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'nvie/vim-flake8'
+"Plugin 'jiangmiao/auto-pairs'
 
 " For Typescript
 " Plugin 'HerringtonDarkholme/yats.vim'
@@ -66,24 +74,27 @@ filetype plugin indent on    " required
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General Settings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Colour theme
 colorscheme sonokai
 hi Normal guibg=NONE ctermbg=NONE
 set termguicolors
 
+" Stop comments being italic - causes highlighting problem
 let g:sonokai_disable_italic_comment=1
 
+" Fix backspace not working issue
 set backspace=indent,eol,start
 
 " Line numbers on
 set number
 " Bell notification off
 set belloff=all
-
 " Turn on syntax highlighting
 syntax on
+" Enable filetype plugins
+filetype plugin on
 
 " Tab navigation
 nnoremap H :tabprevious<CR>
@@ -111,6 +122,7 @@ nnoremap <silent> <C-x> :NERDTreeFind<CR>
 let NERDTreeQuitOnOpen = 1
 let NERDTreeShowHidden=1
 let NERDTreeAutoDeleteBuffer = 1
+let g:webdevicons_conceal_nerdtree_brackets = 1
 
 " Tagbar
 nnoremap <silent> <C-s> :TagbarToggle<CR>
@@ -135,6 +147,9 @@ let g:rainbow_active = 1
 " set statusline+=%{SyntasticStatuslineFlag()}
 " set statusline+=%*
 
+" Dashboard
+let g:dashboard_default_executive ='fzf'
+
 " Syntastic
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -146,15 +161,14 @@ let g:syntastic_python_python_exec = 'python3'
 
 " This will highlight bad white space live when coding - Kinda annoying
 " highlight BadWhitespace ctermbg=red guibg=red
-"au BufNewFile,BufRead *.py
-"    \ set tabstop=4 |
-"
-"    \ set softtabstop=4 |
-"    \ set shiftwidth=4 |
-"    \ set textwidth=79 |
-"    \ set expandtab |
-"    \ set autoindent |
-"    \ set fileformat=unix
+au BufNewFile,BufRead *.py
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=79 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set fileformat=unix
 "au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
 "au BufRead,BufNewFile *.py,*.pyw, set textwidth=100
 "au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/

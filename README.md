@@ -88,6 +88,7 @@ dos2unix <file>
 
 # Features of this config package
 - NERDTree
+- NERDCommenter
 - Linting
 - Git Integration
 - Autocomplete
