@@ -13,7 +13,7 @@ Plugin 'vim-airline/vim-airline'
 
 Plugin 'preservim/nerdtree'
 Plugin 'preservim/tagbar'
-Plugin 'preservim/nerdcommenter' "Use gcc to comment lines
+Plugin 'preservim/nerdcommenter' "Use /cc to comment lines
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -138,6 +138,16 @@ nnoremap <C-p> :Files<Cr>
 let g:coc_disable_startup_warning = 1
 " Run :CocInstall <package> to install new language support
 " Run :CocList to view packages
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
 
 " Rainbow brackets
 let g:rainbow_active = 1

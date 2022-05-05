@@ -2,7 +2,7 @@
 
 # ENVIRONMENT VARIABLES
 export PATH=/auto/share/bin:~/.local/bin:$PATH
-export TERM=xterm-256color
+export TERM=xterm-256color
 export PYTHONPATH=:/auto/share/repo/cfl.latest/lib/:/auto/share/repo/zeus.latest/infra/lib/:/auto/share/repo/zeus.latest/infra
 unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
 
