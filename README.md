@@ -65,15 +65,23 @@ Install all vim plugins
 
 !NOTE! Vundle will fail as it is a submodule for this git
 
+###Dont forget to install the coc language servers - This should be done automatically!
+```
+:CocInstall coc-tsserve
+:CocInstall coc-pyright??
+:CocInstall coc-prettier
+```
+
 Need to finish installing coc.nvim dependancies
 ```
 cd .vim/bundle/coc.nvim
 yarn install
 ```
 
-Install coc.nvim python language support in vim
+Type :CocConfig and add these lines
 ```
-:CocInstall coc-pyright
+"list.statusLineSegments": null,
+"coc.preferences.formatOnSaveFiletypes": ["typescript", "typescriptreact"]
 ```
 
 ###TMUX

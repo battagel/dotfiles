@@ -10,11 +10,13 @@ function my_git_prompt_info() {
   echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$GIT_STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
-ACCENT_COL="%{$fg[yellow]%}"
+ACCENT_COL="$(tput setaf 215)"
 TEXT_COL1="$(tput setaf 249)"
 RESET_COL="$(tput sgr0)"
 
 #PROMPT='%{${TEXT_COL1}%}%n@%m%{$reset_color%} %{${ACCENT_COL}%}%2~%{$reset_color%} $(my_git_prompt_info)%{$reset_color%}%B»%b '
+
+# This method caused issue where newline would be created at a weird length
 #PROMPT='${TEXT_COL1}%n${RESET_COL}@${ACCENT_COL}%m${RESET_COL}:${TEXT_COL1}%2~ $(my_git_prompt_info)${RESET_COL}%B»%b '
 
 PROMPT='%{$fg[blue]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%} %{$fg[blue]%}%2~%{$reset_color%} $(my_git_prompt_info)%{$reset_color%}%B»%b '

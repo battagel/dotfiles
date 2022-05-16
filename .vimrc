@@ -1,4 +1,5 @@
 set nocompatible              " be iMproved, required
+
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
@@ -25,7 +26,6 @@ Plugin 'neoclide/coc.nvim', { 'branch': 'release'}
 
 Plugin 'sheerun/vim-polyglot'
 " Plugin 'mattn/emmet-vim' not currently needed
-Plugin 'frazrepo/vim-rainbow'
 " Plugin 'tabnine/YouCompleteMe' Maybe doesnt work?
 Plugin 'dense-analysis/ale'
 Plugin 'vim-syntastic/syntastic'
@@ -33,14 +33,18 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'christoomey/vim-tmux-navigator'
 " Has to load after most plugins
 Plugin 'ryanoasis/vim-devicons'
-" Plugin 'prettier/vim-prettier', {'do': 'yum install' }
+Plugin 'prettier/vim-prettier', {'do': 'yum install' }
+Plugin 'junegunn/rainbow_parentheses.vim'
 
 " Python specific
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'nvie/vim-flake8'
-"Plugin 'jiangmiao/auto-pairs'
+Plugin 'jiangmiao/auto-pairs'
 
 " For Typescript
+Plugin 'pangloss/vim-javascript'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'peitalin/vim-jsx-typescript'
 " Plugin 'HerringtonDarkholme/yats.vim'
 
 " To take a look at
@@ -96,7 +100,11 @@ syntax on
 " Enable filetype plugins
 filetype plugin on
 
-" Tab navigation
+" Window and tab  navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 nnoremap H :tabprevious<CR>
 nnoremap L :tabnext<CR>
 
@@ -139,18 +147,58 @@ let g:coc_disable_startup_warning = 1
 " Run :CocInstall <package> to install new language support
 " Run :CocList to view packages
 " use <tab> for trigger completion and navigate to the next complete item
+let g:coc_global_extensions = [
+  \ 'coc-tsserver',
+  \ 'coc-lists',
+  \ 'coc-prettier',
+  \ 'coc-pyright'
+  \ ]
+
+" \do performs a code action
+nmap <leader>a <Plug>(coc-codeaction)
+nmap <leader>d :CocDiagnostics<CR><C-w>k
+nmap <leader>f :CocCommand prettier.formatFile<CR>
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gr <Plug>(coc-references)
+
+" Prettier
+command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
+
+" Auto error info / docs when hovering
+function! ShowDocIfNoDiagnostic(timer_id)
+  if (coc#float#has_float() == 0 && CocHasProvider('hover') == 1)
+    silent call CocActionAsync('doHover')
+  endif
+endfunction
+
+function! s:show_hover_doc()
+  call timer_start(500, 'ShowDocIfNoDiagnostic')
+endfunction
+
+autocmd CursorHoldI * :call <SID>show_hover_doc()
+autocmd CursorHold * :call <SID>show_hover_doc()
+
+" Fixed backspace issue
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
+" Tab to select autocomplete
 inoremap <silent><expr> <Tab>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
 
-" Rainbow brackets
-let g:rainbow_active = 1
+" Rainbow brackets use RainbowLoad and RainbowToggle to use
+let g:rainbow#max_level = 16
+" let g:rainbow#pairs = [['(', ')'], ['[', ']']]
+
+" List of colors that you do not want. ANSI code or #RRGGBB
+" let g:rainbow#blacklist = [233, 234]
+
 
 " Status Line
 " set statusline+=%#warningmsg#
