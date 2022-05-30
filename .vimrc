@@ -43,9 +43,9 @@ Plugin 'jiangmiao/auto-pairs'
 
 " For Typescript
 Plugin 'pangloss/vim-javascript'
-Plugin 'leafgarland/typescript-vim'
+" Plugin 'leafgarland/typescript-vim'
 Plugin 'peitalin/vim-jsx-typescript'
-" Plugin 'HerringtonDarkholme/yats.vim'
+Plugin 'HerringtonDarkholme/yats.vim'
 
 " To take a look at
 " Changes the default vim command to a dashboard for ease of use
@@ -120,6 +120,11 @@ set mouse=a
 " Set view command tab autocompletetion on 
 set wildmenu
 
+" Fold specific
+set foldmethod=indent
+set foldlevel=99
+set foldclose=all
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin Settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -134,6 +139,23 @@ let g:webdevicons_conceal_nerdtree_brackets = 1
 
 " Tagbar
 nnoremap <silent> <C-s> :TagbarToggle<CR>
+" Fixed issue of empty tagbar
+let g:tagbar_ctags_bin="/opt/homebrew/bin/ctags"
+let g:tagbar_type_typescript = {
+  \ 'ctagstype': 'typescript',
+  \ 'kinds': [
+    \ 'c:classes',
+    \ 'n:modules',
+    \ 'f:functions',
+    \ 'v:variables',
+    \ 'v:varlambdas',
+    \ 'm:members',
+    \ 'i:interfaces',
+    \ 'e:enums',
+  \ ]
+\ }
+" YATS
+set conceallevel=1
 
 " Airline
 let g:airline_powerline_fonts=1
