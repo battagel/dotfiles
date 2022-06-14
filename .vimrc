@@ -122,8 +122,10 @@ set wildmenu
 
 " Fold specific
 set foldmethod=indent
-set foldlevel=99
-set foldclose=all
+
+" Center on search
+nnoremap n nzz
+nnoremap N Nzz
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin Settings
