@@ -81,9 +81,9 @@ filetype plugin indent on    " required
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Colour theme
-colorscheme sonokai
-hi Normal guibg=NONE ctermbg=NONE
 set termguicolors
+let g:sonokai_transparent_background=1
+colorscheme sonokai
 
 " Stop comments being italic - causes highlighting problem
 let g:sonokai_disable_italic_comment=1
