@@ -28,6 +28,10 @@ yum install cmake
 yum install python3
 ```
 
+Double check if vim is version 8.2. If not manually install using these
+https://phoenixnap.com/kb/how-to-install-vim-centos-7 - For installing dependencies
+https://gist.github.com/yevrah/21cdccc1dc65efd2a4712781815159fb - For compiling
+
 Coc.nvim requires some special attention
 First we need to install nodejs 12 for coc.nvim to work
 Linux:
