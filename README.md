@@ -86,8 +86,13 @@ Double check these have installed
 
 Type :CocConfig and add these lines
 ```
-"list.statusLineSegments": null,
-"coc.preferences.formatOnSaveFiletypes": ["typescript", "typescriptreact"]
+{
+  "coc.preferences.formatOnSaveFiletypes": [
+    "typescript",
+    "typescriptreact",
+    "python"
+   ]
+}
 ```
 
 ## TMUX
