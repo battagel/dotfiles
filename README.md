@@ -6,7 +6,7 @@ git clone --resursive-submodules -j8 git@github.com:battagel/config_files.git
 ```
 Move all config files (no git files) to the ~ directory
 
-###Oh-My-Zsh
+## Oh-My-Zsh - Mac only
 Install ohmyzsh
 ```
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -20,7 +20,7 @@ Include the theme in the newly created .zshrc file
 ZSH_THEME="matthewbattagel"
 ```
 
-###Vim
+## Vim
 Install vim and other dependancies
 ```
 yum install vim
@@ -36,9 +36,11 @@ sudo yum -y update
 curl -sL https://rpm.nodesource.com/setup_12.x | sudo bash -
 sudo yum clean all && sudo yum makecache fast
 sudo yum install -y gcc-c++ make
-sudo yum install -y nodejs            <--- Make sure to uninstall previous node versions
-node -v
+sudo dnf module enable nodejs:12
+sudo dnf install nodejs
+sudo node -v
 ```
+
 https://computingforgeeks.com/how-to-install-nodejs-on-centos-fedora/
 If the following steps dont work try this:
 https://www.codegrepper.com/code-examples/shell/centos+7+install+nodejs+12
@@ -65,17 +67,21 @@ Install all vim plugins
 
 !NOTE! Vundle will fail as it is a submodule for this git
 
-###Dont forget to install the coc language servers - This should be done automatically!
-```
-:CocInstall coc-tsserve
-:CocInstall coc-pyright??
-:CocInstall coc-prettier
-```
-
 Need to finish installing coc.nvim dependancies
 ```
 cd .vim/bundle/coc.nvim
+npm install
+OR
 yarn install
+```
+
+## Dont forget to install the coc language servers in vim - This should be done automatically when you open vim!
+Double check these have installed
+```
+:CocInstall coc-tsserve
+:CocInstall coc-pyright
+:CocInstall coc-prettier
+:CocInstall coc-lists
 ```
 
 Type :CocConfig and add these lines
@@ -84,7 +90,7 @@ Type :CocConfig and add these lines
 "coc.preferences.formatOnSaveFiletypes": ["typescript", "typescriptreact"]
 ```
 
-###TMUX
+## TMUX
 Install tmux 3.2a
 ```
 yum install http://mirror.ghettoforge.org/distributions/gf/el/8/testing/x86_64/tmux-3.2a-3.gf.el8.x86_64.rpm
@@ -116,6 +122,8 @@ Any errors regarding ^M found in files run this:
 yum install dos2unix
 dos2unix <file>
 ```
+
+# All done!!
 
 # Features of this config package
 - NERDTree
