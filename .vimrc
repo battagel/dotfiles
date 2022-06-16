@@ -82,7 +82,7 @@ filetype plugin indent on    " required
 
 " Colour theme
 set termguicolors
-let g:sonokai_transparent_background=1
+let g:sonokai_transparent_background=0
 colorscheme sonokai
 
 " Stop comments being italic - causes highlighting problem
@@ -121,7 +121,7 @@ set mouse=a
 set wildmenu
 
 " Fold specific
-set foldmethod=indent
+" set foldmethod=indent
 
 " Center on search
 nnoremap n nzz
@@ -260,3 +260,5 @@ let python_highlight_all=1
 " YouCompleteMe
 " let g:ycm_autoclose_preview_window_after_completion=1
 " map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+hi Normal guibg=NONE ctermbg=NONE
