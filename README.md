@@ -98,6 +98,15 @@ Type :CocConfig and add these lines
    ]
 }
 ```
+You need to use a specific font to enable dev icons
+https://github.com/ryanoasis/nerd-fonts
+Download .zip
+Run either the .sh or the .ps1 file with the specific font as a param
+```
+./install.ps1 Hack
+./install.sh Hack
+```
+Apply the specific font in the terminal. Reload terminal app.
 
 ## TMUX
 Install tmux 3.2a
