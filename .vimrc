@@ -92,6 +92,7 @@ let g:sonokai_disable_italic_comment=1
 set backspace=indent,eol,start
 
 " Line numbers on
+set relativenumber 
 set number
 " Bell notification off
 set belloff=all

@@ -1,5 +1,23 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=/opt/hpe/bin:auto/share/bin:~/.local/bin:~/.emacs.d/bin:$PATH
+export TERM="xterm-256color"
+export PATH="${PATH}:/auto/homecxo.nas01/battagel/.cargo/bin/navi"
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+_call_navi() {
+  local selected
+  if selected="$(printf "$(navi --print --path ${HOME}/cheats </dev/tty)")"; then
+    LBUFFER="$selected"
+  fi
+  zle redisplay
+}
+
+zle -N _call_navi
+bindkey '^n' _call_navi
+
+bindkey "^[[1~" beginning-of-line
+bindkey "^[[3~" delete-char
+bindkey "^[[4~" end-of-line
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -70,8 +88,9 @@ ZSH_THEME="matthewbattagel"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git zsh-autosuggestions autojump python)
 
+source ~/.zsh/local/fast-syntax-highlighting.plugin.zsh
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -99,3 +118,17 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+#
+# Navi
+alias n="navi"
+#
+# Nimble Specific
+alias li_pebble="package.pl --op list --branch=default --date --verbose"
+alias li_ocean='package.pl --op list --branch=rel-ocean --date --verbose'
+alias li_fiji='package.pl --op list --branch=rel-fiji --date --verbose'
+alias li_newport='package.pl --op list --branch=rel-newport --date --verbose'
+
+alias dock_con='sudo docker exec -it cfl-matt /bin/bash -c "sudo su - battagel"'
+
+alias pypath='export PYTHONPATH=$PYTHONPATH:`pwd`'
+
