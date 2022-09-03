@@ -132,3 +132,4 @@ alias dock_con='sudo docker exec -it cfl-matt /bin/bash -c "sudo su - battagel"'
 
 alias pypath='export PYTHONPATH=$PYTHONPATH:`pwd`'
 
+alias ctags=/opt/homebrew/bin/ctags
