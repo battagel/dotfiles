@@ -171,17 +171,26 @@ yum install dos2unix
 dos2unix <file>
 ```
 
+## Doom emacs
+
+Install emacs. Pull the doom emacs git repo over emacs. Replace doom config files using the following
+
+```
+cp ~/.doom.d/ ./doom.d/
+```
+
 # All done!!
 
 # Features of this config package
 
--   NERDTree
--   NERDCommenter
--   Linting
--   Git Integration
--   Autocomplete
--   TagBar
--   Fuzzy Finder
--   Pretty colours
--   Vim TMUX integration
--   Easily edited config files using hotkeys
+- NERDTree
+- NERDCommenter
+- Linting
+- Git Integration
+- Autocomplete
+- TagBar
+- Fuzzy Finder
+- Pretty colours
+- Vim TMUX integration
+- Easily edited config files using hotkeys
+- Doom emacs config
