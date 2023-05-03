@@ -32,10 +32,11 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-palenight                 ; set doom theme
-      doom-themes-treemacs-theme "doom-colors"  ; set treemacs theme
-      doom-font (font-spec                      ; set font family
-                 :size 16))
+(setq doom-theme 'doom-palenight
+      doom-themes-treemacs-theme "doom-colors"
+      doom-font (font-spec
+                 ;; :family "Fira Code"
+                 :size 14))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -43,7 +44,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/OneDrive/Org/")
 ;; (use-package typescript-mode
 ;;   :mode (rx ".ts" string-end)
 ;;   :init
@@ -80,7 +81,141 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
-(define-key evil-insert-state-map (kbd "C-c C-c") 'evil-normal-state)
-(define-key evil-normal-state-map (kbd "C-c C-c") 'evil-normal-state)
+;;
 ;; Rebind hash key
-(global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
+(map!
+ :desc "Override M-3 to insert # rather than change workspace when in insert mode"
+ :i "M-3"
+ #'(lambda () (interactive) (insert "#")))
+(map!
+ :desc "Next in search" :n "n" #'(lambda () (interactive) (evil-ex-search-next) (evil-scroll-line-to-center nil))
+ :desc "Previous in search" :n "N" #'(lambda () (interactive) (evil-ex-search-previous) (evil-scroll-line-to-center nil)))
+
+;; Latex
+;;
+(defun latex-word-count ()
+        (interactive)
+        (let* ((this-file (buffer-file-name))
+                (word-count
+                (with-output-to-string
+                (with-current-buffer standard-output
+                (call-process "texcount" nil t nil "-brief" this-file)))))
+        (string-match "\n$" word-count)
+        (message (replace-match "" nil nil word-count))))
+
+(map! (:when (featurep! :lang latex) ; custom keymap using local leader
+              (:map LaTeX-mode-map
+                       :localleader
+                       :desc "Insert environment" "e" #'LaTeX-environment
+                       :desc "Insert section" "s" #'LaTeX-section
+                       :desc "Format document" "f" #'LaTeX-fill-buffer
+                       :desc "Show all previews" "d" #'preview-document
+                       :desc "Clear previews" "D" #'preview-clearout-document
+                       :desc "Count words" "w" #'latex-word-count
+                       :desc "Fold buffer" "," #'TeX-fold-buffer
+                       :desc "Unfold buffer" "." #'TeX-fold-clearout-buffer)))
+
+(add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode) ; Midnight mode always
+
+(setq font-latex-fontify-sectioning 1.3) ; increase section font scaling
+
+(add-hook! 'LaTeX-mode-hook
+           #'TeX-fold-mode      ; enable folding of tex commands
+        #'auto-fill-mode
+        (add-hook 'after-save-hook #'(lambda () (interactive) (TeX-command-run-all nil)) nil t) ; Compile on save
+           #'orgtbl-mode)       ; enable embedded org-mode tables
+
+;; GitHub Copilot
+(global-copilot-mode 1)
+(use-package! copilot
+  :bind (("C-<tab>" . 'copilot-accept-completion-by-word)
+         ("M-TAB" . 'copilot-clear-overlay)
+         ("M-<tab>" . 'copilot-clear-overlay)
+         :map copilot-completion-map
+         ("<tab>" . 'copilot-accept-completion)
+         ("TAB" . 'copilot-accept-completion)))
+
+;; Provides configuration for working with 'org-mode' - Ripped from Harry
+(use-package! org
+  ;; Wrap text at 80 characters for better Git diffs and readability
+  :hook (org-mode . auto-fill-mode)
+  :config
+  ;; Hide emphasis markers that wrap text (i.e. bold, italics)
+  (setq org-hide-emphasis-markers t)
+
+  ;; Use 'pdf-tools' as the default viewer for exported Org documents
+  (add-to-list 'org-file-apps '("\\.pdf\\'" . pdf-tools))
+  ;; Enlarge top and second level heading fonts
+  (custom-set-faces!
+    '(org-level-1
+      :height 1.2
+      :inherit outline-1)
+    '(org-level-2
+      :height 1.1
+      :inherit outline-2))
+  ;; Enable export support for LaTeX and BibTeX formats
+  (require 'ox-latex)
+  (require 'ox-bibtex)
+  ;; Better syntax highlighting in exported LaTeX
+  (setq org-latex-src-block-backend 'minted)
+  ;; Enable additional packages for exported LaTeX, takes the form:
+  ;;    ("options" "package" SNIPPET-FLAG COMPILERS)
+  (setq org-latex-packages-alist '(("" "booktabs")
+                                   ("" "tabularx")
+                                   ("" "color")
+                                   ("newfloat" "minted")))
+  ;; Define 'mimore' LaTeX document class for use in exports
+  (add-to-list 'org-latex-classes
+               '("mimore"
+                 "\\documentclass{mimore}\n[NO-DEFAULT-PACKAGES\]\n[PACKAGES\]\n[EXTRA\]"
+                 ("\\section{%s}" . "\\section\*{%s}")
+                 ("\\subsection{%s}" . "\\subsection\*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection\*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph\*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph\*{%s}"))))
+
+
+;; Provides 'org-modern' configuration in place of Doom's (org +pretty)
+(use-package! org-modern
+  :after org
+  :config
+  ;; Disable table formatting and star hiding, increase label border
+  (setq org-modern-table nil
+        org-modern-hide-stars nil
+        org-modern-label-border 0.3)
+  ;; Enable org-modern globally
+  (global-org-modern-mode))
+
+;; Provides support for presenting directly from 'org-mode' buffers
+(use-package! org-tree-slide
+  :after org
+  :config
+  ;; Hide formatting characters, use top-level headings as slides
+  (setq org-tree-slide-skip-outline-level 2)
+  ;; Use the fancy presentation profile, shiny animations!
+  (org-tree-slide-presentation-profile))
+
+;; Provides configuration for 'org-roam', an Emacs knowledge graph
+(use-package! org-roam
+  :after org
+  :config
+  ;; Hide common link types from org-roam graph
+  (setq org-roam-graph-link-hidden-types
+        '("file"
+          "http"
+          "https")))
+
+;; Provides 'websocket', a dependency of 'org-roam-ui'
+(use-package! websocket
+  :after org-roam)
+
+;; Provides 'org-roam-ui' a web frontend for 'org-roam'
+(use-package! org-roam-ui
+  :after org-roam
+  :config
+  ;; Sync UI theme with Emacs, follow current the buffer, update on save, and
+  ;; open browser on start
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))

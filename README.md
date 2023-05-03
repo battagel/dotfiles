@@ -176,7 +176,16 @@ dos2unix <file>
 Install emacs. Pull the doom emacs git repo over emacs. Replace doom config files using the following
 
 ```
-cp ~/.doom.d/ ./doom.d/
+git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
+~/.emacs.d/bin/doom install
+```
+
+You can also add doom to your path or an alias
+
+```
+alias doom=".emacs.d/bin/doom"
+or
+export PATH="$PATH:$HOME/.emacs.d/bin/doom"
 ```
 
 # All done!!

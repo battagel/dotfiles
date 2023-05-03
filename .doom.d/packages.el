@@ -48,3 +48,14 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
+
+;; Custom Packages
+;;
+;; GitHub Copilot
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+
+;; Org
+(unpin! org-roam) ; use latest version of org-roam
+(package! org-roam-ui) ; enable org-roam-ui server
+(package! org-modern) ; nicer fontification than doom's +pretty
