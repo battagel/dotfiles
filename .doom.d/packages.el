@@ -55,6 +55,12 @@
 (package! copilot
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 
+;; Smudge
+(package! smudge)
+
+;; Multi-vterm
+(package! multi-vterm)
+
 ;; Org
 (unpin! org-roam) ; use latest version of org-roam
 (package! org-roam-ui) ; enable org-roam-ui server

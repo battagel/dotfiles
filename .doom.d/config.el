@@ -35,7 +35,7 @@
 (setq doom-theme 'doom-palenight
       doom-themes-treemacs-theme "doom-colors"
       doom-font (font-spec
-                 ;; :family "Fira Code"
+                 :family "Menlo"
                  :size 14))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -92,7 +92,6 @@
  :desc "Previous in search" :n "N" #'(lambda () (interactive) (evil-ex-search-previous) (evil-scroll-line-to-center nil)))
 
 ;; Latex
-;;
 (defun latex-word-count ()
         (interactive)
         (let* ((this-file (buffer-file-name))
@@ -103,7 +102,7 @@
         (string-match "\n$" word-count)
         (message (replace-match "" nil nil word-count))))
 
-(map! (:when (featurep! :lang latex) ; custom keymap using local leader
+(map! (:when (modulep! :lang latex) ; custom keymap using local leader
               (:map LaTeX-mode-map
                        :localleader
                        :desc "Insert environment" "e" #'LaTeX-environment
@@ -115,7 +114,7 @@
                        :desc "Fold buffer" "," #'TeX-fold-buffer
                        :desc "Unfold buffer" "." #'TeX-fold-clearout-buffer)))
 
-(add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode) ; Midnight mode always
+(add-hook 'pdf-view-mode-hook 'pdf-view-themed-minor-mode) ; Match background with theme
 
 (setq font-latex-fontify-sectioning 1.3) ; increase section font scaling
 
@@ -125,8 +124,37 @@
         (add-hook 'after-save-hook #'(lambda () (interactive) (TeX-command-run-all nil)) nil t) ; Compile on save
            #'orgtbl-mode)       ; enable embedded org-mode tables
 
+;; Smudge - Spotify
+(use-package! smudge
+  :init
+  :config
+        (setq smudge-oauth2-client-secret "a3103c179ddc443da041531f229917d1")
+        (setq smudge-oauth2-client-id "51dfc5a70ae4410ea0b691b429d25b9e")
+        (setq smudge-player-status-truncate-length 25)
+        (setq smudge-transport 'connect)
+        (global-smudge-remote-mode))
+
+(map! :leader
+      :prefix "k"
+      :desc "Spotify"
+      :desc "Next track" "n" #'smudge-controller-next-track
+      :desc "Previous track" "N" #'smudge-controller-previous-track
+      :desc "Find track" "f" #'smudge-track-search
+      :desc "My playlists" "m" #'smudge-my-playlists
+      :desc "Featured playlists" "p" #'smudge-featured-playlists
+      :desc "User playlists" "u" #'smudge-user-playlists
+      :desc "Toggle play" "SPC" #'smudge-controller-toggle-play
+      :desc "Toggle repeat" "r" #'smudge-controller-toggle-repeat
+      :desc "Toggle shuffle" "s" #'smudge-controller-toggle-shuffle
+      :desc "Volume up" "+" #'smudge-controller-volume-up
+      :desc "Volume down" "-" #'smudge-controller-volume-down
+      :desc "Volume mute/unmute" "x" #'smudge-controller-volume-mute-unmute
+      :desc "Select device" "d" #'smudge-select-device
+      :desc "Quit" "q" #'quit-window)
+
 ;; GitHub Copilot
 (global-copilot-mode 1)
+(global-company-mode 0)
 (use-package! copilot
   :bind (("C-<tab>" . 'copilot-accept-completion-by-word)
          ("M-TAB" . 'copilot-clear-overlay)
@@ -135,58 +163,62 @@
          ("<tab>" . 'copilot-accept-completion)
          ("TAB" . 'copilot-accept-completion)))
 
-;; Provides configuration for working with 'org-mode' - Ripped from Harry
+;; Multi-vterm
+(use-package multi-vterm
+  :config
+  (add-hook 'vterm-mode-hook
+        (lambda ()
+        (setq-local evil-insert-state-cursor 'box)
+        (evil-insert-state)))
+  (define-key vterm-mode-map [return]                      #'vterm-send-return)
+
+  (setq vterm-keymap-exceptions nil)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-c")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
+  (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+  (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
+  (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
+  (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
+  (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
+  (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
+  (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
+
+;; Org - Ripped from Harry
 (use-package! org
   ;; Wrap text at 80 characters for better Git diffs and readability
   :hook (org-mode . auto-fill-mode)
   :config
-  ;; Hide emphasis markers that wrap text (i.e. bold, italics)
-  (setq org-hide-emphasis-markers t)
+  ;; Hide ephasis markers that wrap text (i.e. bold, italics)
+  (setq org-hide-emphasis-markers t))
 
-  ;; Use 'pdf-tools' as the default viewer for exported Org documents
-  (add-to-list 'org-file-apps '("\\.pdf\\'" . pdf-tools))
-  ;; Enlarge top and second level heading fonts
-  (custom-set-faces!
-    '(org-level-1
-      :height 1.2
-      :inherit outline-1)
-    '(org-level-2
-      :height 1.1
-      :inherit outline-2))
-  ;; Enable export support for LaTeX and BibTeX formats
-  (require 'ox-latex)
-  (require 'ox-bibtex)
-  ;; Better syntax highlighting in exported LaTeX
-  (setq org-latex-src-block-backend 'minted)
-  ;; Enable additional packages for exported LaTeX, takes the form:
-  ;;    ("options" "package" SNIPPET-FLAG COMPILERS)
-  (setq org-latex-packages-alist '(("" "booktabs")
-                                   ("" "tabularx")
-                                   ("" "color")
-                                   ("newfloat" "minted")))
-  ;; Define 'mimore' LaTeX document class for use in exports
-  (add-to-list 'org-latex-classes
-               '("mimore"
-                 "\\documentclass{mimore}\n[NO-DEFAULT-PACKAGES\]\n[PACKAGES\]\n[EXTRA\]"
-                 ("\\section{%s}" . "\\section\*{%s}")
-                 ("\\subsection{%s}" . "\\subsection\*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection\*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph\*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph\*{%s}"))))
+;; ;; Provides 'org-modern' configuration in place of Doom's (org +pretty)
+;; (use-package! org-modern
+;;   :after org
+;;   :config
+;;   ;; Disable table formatting and star hiding, increase label border
+;;   (setq org-modern-table nil
+;;         org-modern-hide-stars nil
+;;         org-modern-label-border 0.3)
+;;   ;; Enable org-modern globally
+;;   (global-org-modern-mode))
 
-
-;; Provides 'org-modern' configuration in place of Doom's (org +pretty)
-(use-package! org-modern
-  :after org
-  :config
-  ;; Disable table formatting and star hiding, increase label border
-  (setq org-modern-table nil
-        org-modern-hide-stars nil
-        org-modern-label-border 0.3)
-  ;; Enable org-modern globally
-  (global-org-modern-mode))
-
-;; Provides support for presenting directly from 'org-mode' buffers
+;; ;; Org-Roam
 (use-package! org-tree-slide
   :after org
   :config
@@ -204,6 +236,11 @@
         '("file"
           "http"
           "https")))
+
+(map! (:when (modulep! :lang org) ; custom keymap using local leader
+              (:map org-mode-map
+                       :localleader
+                       :desc "Open roam UI" "w" #'org-roam-ui-open)))
 
 ;; Provides 'websocket', a dependency of 'org-roam-ui'
 (use-package! websocket
