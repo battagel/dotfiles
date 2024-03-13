@@ -11,7 +11,7 @@ VER := latest
 
 # Full installation from scratch
 .phony: install
-install: oh-my-zsh zsh-suggestions dotfiles source
+install: oh-my-zsh dotfiles source
 	$(ECHO) "Completed full installation."
 
 # Run the oh-my-zsh install script
@@ -29,10 +29,8 @@ source:
 # Run the oh-my-zsh install script
 .phony: oh-my-zsh
 oh-my-zsh:
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# Install zsh-autosuggestions plugin
-.phony: zsh-suggestions
-zsh-suggestions:
-	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+	@sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    @git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+	@git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+	@git clone https://github.com/z-shell/F-Sy-H.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/F-Sy-H
 
