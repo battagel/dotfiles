@@ -1,7 +1,5 @@
 # Commands
 ECHO := echo
-SH := sh
-CLONE := git clone
 STOW := stow --target=$(HOME)
 SOURCE := source
 DOCKER := docker
@@ -28,11 +26,12 @@ dotfiles:
 source:
 	$(SOURCE) ~/.profile ~/.zshrc ~/.vimrc ~/.tmux.conf ~/.tmux.conf.local
 
+## DOESNT WORK ATM
 # Run the oh-my-zsh install script
 .phony: oh-my-zsh
 oh-my-zsh:
-	$(SH) -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    $(CLONE) --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-	$(CLONE) clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-	$(CLONE) clone https://github.com/z-shell/F-Sy-H.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/F-Sy-H
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+	git clone https://github.com/z-shell/F-Sy-H.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/F-Sy-H
 
