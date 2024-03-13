@@ -3,10 +3,10 @@
 ## Dependencies
 
 ``` shell
-yum install vim
-yum install cmake
-yum install python3
-yum install perl
+vim
+cmake
+python3
+perl
 ```
 
 ## Install
@@ -14,6 +14,8 @@ yum install perl
 This repo uses GNU stow. Please make sure it is installed.
 
 ``` shell
+git clone --recurse-submodules https://github.com/battagel/dotfiles.git 
+cd dotfiles
 make
 ```
 
