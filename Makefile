@@ -16,7 +16,7 @@ install: oh-my-zsh zsh-suggestions dotfiles source
 
 # Run the oh-my-zsh install script
 .phony: dotfiles
-install:
+dotfiles:
 	$(ECHO) "Installing dotfiles..."
 	$(STOW) zsh; $(STOW) vim; $(STOW) tmux
 	$(ECHO) "Dotfiles installed."
