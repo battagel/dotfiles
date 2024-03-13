@@ -1,6 +1,6 @@
 # Commands
 ECHO := echo
-STOW := stow --target=$HOME
+STOW := stow --target=$(HOME)
 SOURCE := source
 DOCKER := docker
 
@@ -18,7 +18,7 @@ install: oh-my-zsh zsh-suggestions dotfiles source
 .phony: dotfiles
 dotfiles:
 	$(ECHO) "Installing dotfiles..."
-	$(STOW) zsh; $(STOW) vim; $(STOW) tmux
+	$(STOW) zsh vim tmux
 	$(ECHO) "Dotfiles installed."
 
 # Source the dotfiles
