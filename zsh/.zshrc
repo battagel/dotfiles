@@ -8,23 +8,7 @@ fi
 # If you come from bash you might have to change your $PATH.
 export PATH=/opt/hpe/bin:auto/share/bin:~/.local/bin:~/.config/emacs/bin:$PATH
 export TERM="xterm-256color"
-export PATH="${PATH}:/Users/battagel/.emacs.d/bin"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-_call_navi() {
-  local selected
-  if selected="$(printf "$(navi --print --path ${HOME}/cheats </dev/tty)")"; then
-    LBUFFER="$selected"
-  fi
-  zle redisplay
-}
-
-zle -N _call_navi
-bindkey '^n' _call_navi
-
-bindkey "^[[1~" beginning-of-line
-bindkey "^[[3~" delete-char
-bindkey "^[[4~" end-of-line
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -124,9 +108,6 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-#
-# Navi
-alias n="navi"
 
 # Docker
 alias dev='docker run --rm -ti -v "${PWD}":/home/dev/mnt dev-env'
