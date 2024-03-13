@@ -1,43 +1,44 @@
-# Here are the steps you need to follow to use this setup
+# Dotfiles
 
-Clone files into linux system using the following:
+## Dependencies
 
-```
-git clone --resursive-submodules -j8 git@github.com:battagel/config_files.git
-```
-
-Move all config files (no git files) to the ~ directory
-
-## Oh-My-Zsh
-
-Make sure zsh is installed
-Install ohmyzsh
-
-```
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
-Move my custom theme into .oh-my-zsh/themes
-
-```
-mv matthewbattagel.zsh-theme ~/.oh-my-zsh/themes
-```
-
-Install zsh dependencies
-
-```
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-```
-
-## Vim
-
-Install vim and other dependancies
-
-```
+``` shell
 yum install vim
 yum install cmake
 yum install python3
+yum install perl
 ```
+
+## Install
+
+This repo uses GNU stow. Please make sure it is installed.
+
+``` shell
+make
+```
+
+## Post-Install
+
+Source vim config
+
+Go into vimrc file
+```
+vim .vimrc
+```
+
+```
+:source .vimrc
+```
+
+Install all vim plugins
+
+```
+:PluginInstall
+```
+
+!NOTE! Vundle will fail as it is a submodule for this git
+
+## Vim
 
 Double check if vim is version 8.2. If not manually install using these
 https://phoenixnap.com/kb/how-to-install-vim-centos-7 - For installing dependencies
@@ -67,25 +68,7 @@ Or for Mac:
 brew install nodejs
 ```
 
-Go into vimrc file
 
-```
-vim .vimrc
-```
-
-Source vim config
-
-```
-:source .vimrc
-```
-
-Install all vim plugins
-
-```
-:PluginInstall
-```
-
-!NOTE! Vundle will fail as it is a submodule for this git
 
 Need to finish installing coc.nvim dependancies
 
@@ -142,7 +125,6 @@ yum install http://mirror.ghettoforge.org/distributions/gf/el/8/testing/x86_64/t
 Config requires perl
 
 ```
-yum install perl
 ```
 
 Source the config files - First file may throw some errors
@@ -172,15 +154,6 @@ dos2unix <file>
 ```
 
 ## Doom emacs
-
-Install emacs. Pull the doom emacs git repo over emacs. Replace doom config files using the following
-
-```
-git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
-~/.emacs.d/bin/doom install
-```
-
-You can also add doom to your path or an alias
 
 ```
 alias doom=".emacs.d/bin/doom"
