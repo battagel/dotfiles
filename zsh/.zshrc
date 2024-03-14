@@ -50,9 +50,8 @@ source $ZSH/oh-my-zsh.sh
 # ALIASES #
 ###########
 
+alias dot="cd ~/repos/dotfiles"
 alias ws="cd /data/workspace/battagel"
 alias arcus="cd /data/workspace/battagel/repos/arcus/container"
 alias podls="sudo podman image ls"
 alias podclear="sudo podman image ls | grep swiss_npi | awk '{print $3}' | sudo xargs -I {} sudo podman image rm {} || true"
-
-cd ~
