@@ -86,7 +86,9 @@
 (setq which-key-idle-delay 0.2)
 (evil-set-undo-system 'undo-tree)
 (setq org-hide-block-startup t)
-(setq fill-column 132)
+(defun my-fill-column-hook ()
+  (setq fill-column 132))
+(add-hook 'c-mode-hook 'my-fill-column-hook)
 
 ;; If running on a Mac, automatically fullscreen on launch
 (if IS-MAC (add-to-list 'default-frame-alist'(fullscreen . fullboth)))
