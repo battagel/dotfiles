@@ -16,7 +16,8 @@
      ((copilot copilot-exceeds-max-char))
      (defvaralias)))
  '(warning-suppress-types
-   '(((copilot copilot-exceeds-max-char))
+   '((emacs)
+     ((copilot copilot-exceeds-max-char))
      ((copilot copilot-exceeds-max-char))
      ((copilot copilot-exceeds-max-char))
      ((copilot copilot-exceeds-max-char))

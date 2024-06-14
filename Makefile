@@ -36,9 +36,9 @@ options:
 			case $$opt in \
 				1) $(STOW) bash;; \
 				2) $(STOW) zsh;; \
-				3) $(STOW) bash;; \
-			  4) $(STOW) bash;; \
-			  5) $(STOW) bash;; \
+				3) $(STOW) vim;; \
+			  4) $(STOW) tmux;; \
+			  5) $(STOW) emacs;; \
 				*) echo "Invalid option: $$opt"; exit 1;; \
 			esac; \
 		done'

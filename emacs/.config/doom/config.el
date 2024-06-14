@@ -36,7 +36,7 @@
       doom-themes-treemacs-theme "doom-colors"
       doom-font (font-spec
                  :family "Menlo"
-                 :size 14))
+                 :size 12))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -84,8 +84,10 @@
 ;;
 ;; General
 (setq which-key-idle-delay 0.2)
+(setq tab-width 4)
 (evil-set-undo-system 'undo-tree)
 (setq org-hide-block-startup t)
+(setq display-line-numbers t)
 (defun my-fill-column-hook ()
   (setq fill-column 132))
 (add-hook 'c-mode-hook 'my-fill-column-hook)
@@ -397,7 +399,8 @@
   :hook (org-mode . auto-fill-mode)
   :config
   ;; Hide ephasis markers that wrap text (i.e. bold, italics)
-  (setq org-hide-emphasis-markers t))
+  (setq org-hide-emphasis-markers t)
+  (setq org-tree-slide-heading-emphasis t))
 
 ;; Provides 'org-modern' configuration in place of Doom's (org +pretty)
 (use-package! org-modern

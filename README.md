@@ -18,6 +18,7 @@ git clone --recurse-submodules https://github.com/battagel/dotfiles.git
 cd dotfiles
 make
 ```
+test
 
 ## Post-Install
 
