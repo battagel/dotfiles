@@ -1,116 +1,55 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-;; Place your private configuration here! Remember, you do not need to run 'doom
-;; sync' after modifying this file!
-
-
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets. It is optional.
+;; Doom
 (setq user-full-name "Matthew Battagel"
       user-mail-address "matthew@battagel.me.uk")
-
-;; Doom exposes five (optional) variables for controlling fonts in Doom:
-;;
-;; - `doom-font' -- the primary font to use
-;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
-;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
-;;   presentations or streaming.
-;; - `doom-unicode-font' -- for unicode glyphs
-;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
-;;
-;; See 'C-h v doom-font' for documentation and more examples of what they
-;; accept. For example:
-;;
-;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
-;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
-;;
-;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
-;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
-;; refresh your font settings. If Emacs still can't find your font, it likely
-;; wasn't installed correctly. Font issues are rarely Doom issues!
-
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-palenight
       doom-themes-treemacs-theme "doom-colors"
       doom-font (font-spec
                  :family "Menlo"
                  :size 12))
-
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
+(setq org-directory "~/Google-Drive/Org/")
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Google Drive/My Drive/Org/")
-;; (use-package typescript-mode
-;;   :mode (rx ".ts" string-end)
-;;   :init
-;;   (define-derived-mode typescript-tsx-mode typescript-mode "typescript-tsx")
-;;   (add-to-list 'auto-mode-alist (cons (rx ".tsx" string-end) #'typescript-tsx-mode)))
-;; Whenever you reconfigure a package, make sure to wrap your config in an
-;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
-;;
-;;   (after! PACKAGE
-;;     (setq x y))
-;;
-;; The exceptions to this rule:
-;;
-;;   - Setting file/directory variables (like `org-directory')
-;;   - Setting variables which explicitly tell you to set them before their
-;;     package is loaded (see 'C-h v VARIABLE' to look up their documentation).
-;;   - Setting doom variables (which start with 'doom-' or '+').
-;;
-;; Here are some additional functions/macros that will help you configure Doom.
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package!' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
-;; This will open documentation for it, including demos of how they are used.
-;; Alternatively, use `C-h o' to look up a symbol (functions, variables, faces,
-;; etc).
-;;
-;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
-;; they are implemented.
-;;
 ;; General
 (setq which-key-idle-delay 0.2)
 (setq tab-width 4)
-(evil-set-undo-system 'undo-tree)
-(setq org-hide-block-startup t)
-(setq display-line-numbers t)
+(setq custom-line-length 132) ;; Custom variable for line length
+(setq flycheck-flake8-maximum-line-length custom-line-length)
 (defun my-fill-column-hook ()
-  (setq fill-column 132))
+  (setq fill-column 80)) ;; 80 is small for small buffers
 (add-hook 'c-mode-hook 'my-fill-column-hook)
+(evil-set-undo-system 'undo-tree)
+(setq display-line-numbers t)
+(setq company-ispell-available nil) ;; This really slows down auto complete
 
 ;; If running on a Mac, automatically fullscreen on launch
-(if IS-MAC (add-to-list 'default-frame-alist'(fullscreen . fullboth)))
+(if (eq system-type 'darwin) (add-to-list 'default-frame-alist '(fullscreen . fullboth)))
 
 ;; Workspace keybinds
 (map! :map doom-leader-workspace-map
       :desc "Swap Left" "h" #'+workspace/swap-left
       :desc "Swap Right" "l" #'+workspace/swap-right)
 
-(map! :after lsp-ui-peek
-      :map c-mode-map
-      :localleader
-      :desc "Callers List" "c" #'cscope-find-functions-calling-this-function
-      :desc "Callees List" "C" #'cscope-find-called-functions
-      :desc "Index Files" "i" #'cscope-index-files
-      :desc "Find Symbol" "s" #'cscope-find-this-symbol
-      :desc "Find Text" "t" #'cscope-find-this-text-string
-      :desc "Find File" "f" #'cscope-find-this-file
-      :desc "Find References" "D" #'cscope-find-assignments-to-this-symbol
-      :desc "Find Definition" "d" #'cscope-find-global-definition)
+;; DragStuff
+(use-package drag-stuff
+  :config
+  (drag-stuff-global-mode 1)
+  (drag-stuff-define-keys))
+
+;; Dired
+(defun kill-all-dired-buffers ()
+  "Kill all dired buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq nil (mapcar #'get-buffer (delq nil (mapcar #'buffer-name (buffer-list)))))))
+
+(defun dired-kill-all-buffers-on-quit ()
+  "Override `q` in dired to kill all dired buffers."
+  (define-key dired-mode-map (kbd "q") 'kill-all-dired-buffers))
+
+(add-hook 'dired-mode-hook 'dired-kill-all-buffers-on-quit)
+
 ;; Provides configuration for working with 'eshell', a shell within Emacs
 (use-package! eshell
   :defer
@@ -124,19 +63,17 @@
   ;; When looking for Go project files, I don't care about vendored dependencies
   (add-to-list 'projectile-globally-ignored-directories "*vendor"))
 
-;; GitHub Copilot
-(use-package! copilot
+;; GitHub Copilot Configuration
+(use-package copilot
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
-              ("<tab>" . 'copilot-accept-completion)
-              ("TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word))
-  :config (setq copilot-max-char 1000000))
-
-;; Provides better Emacs support for Python docstrings
-;; (use-package! python-docstring-mode
-;;   :hook python-mode)
+              ("C-<tab>" . copilot-accept-completion)
+              ;; ("<tab>" . copilot-accept-completion-by-word)
+              ("C-n" . copilot-next-completion)
+              ("C-p" . copilot-previous-completion))
+  :config
+  (setq copilot-max-char 1000000)
+  (setq copilot-idle-delay 0.5))
 
 ;; Rebind hash key
 (map!
@@ -182,70 +119,6 @@
            (add-hook 'after-save-hook #'(lambda () (interactive) (TeX-command-run-all nil)) nil t) ; Compile on save
                       #'orgtbl-mode)       ; enable embedded org-mode tables
 
-;; ;; Smudge - Spotify
-;; (use-package! smudge
-;;   :init
-;;   :config
-;;         (setq smudge-oauth2-client-secret "a3103c179ddc443da041531f229917d1")
-;;         (setq smudge-oauth2-client-id "51dfc5a70ae4410ea0b691b429d25b9e")
-;;         (setq smudge-player-status-truncate-length 25)
-;;         (setq smudge-transport 'connect)
-;;         (global-smudge-remote-mode))
-
-;; (map! :leader
-;;       :prefix "k"
-;;       :desc "Spotify"
-;;       :desc "Next track" "n" #'smudge-controller-next-track
-;;       :desc "Previous track" "N" #'smudge-controller-previous-track
-;;       :desc "Find track" "f" #'smudge-track-search
-;;       :desc "My playlists" "m" #'smudge-my-playlists
-;;       :desc "Featured playlists" "p" #'smudge-featured-playlists
-;;       :desc "User playlists" "u" #'smudge-user-playlists
-;;       :desc "Toggle play" "SPC" #'smudge-controller-toggle-play
-;;       :desc "Toggle repeat" "r" #'smudge-controller-toggle-repeat
-;;       :desc "Toggle shuffle" "s" #'smudge-controller-toggle-shuffle
-;;       :desc "Volume up" "+" #'smudge-controller-volume-up
-;;       :desc "Volume down" "-" #'smudge-controller-volume-down
-;;       :desc "Volume mute/unmute" "x" #'smudge-controller-volume-mute-unmute
-;;       :desc "Select device" "d" #'smudge-select-device
-;;       :desc "Quit" "q" #'quit-window)
-
-;; Multi-vterm
-(use-package multi-vterm
-  :config
-  (add-hook 'vterm-mode-hook
-            (lambda ()
-              (setq-local evil-insert-state-cursor 'box)
-              (evil-insert-state)))
-  (define-key vterm-mode-map [return]                      #'vterm-send-return)
-
-  (setq vterm-keymap-exceptions nil)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-c")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-  (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
-  (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
-  (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
-  (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
-  (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
-  (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
-
 ;; TRAMP settings
 (use-package! tramp
   :defer
@@ -257,12 +130,20 @@
     (setq vterm-tramp-shells `(("ssh" ,+tramp-shell)
                                ("sshx" ,+tramp-shell)
                                ("docker" ,+tramp-shell)))))
+
+;; Vterm
+(map! :after vterm
+      :map vterm-mode-map
+      :ni "C-c" #'vterm--self-insert)
+
+
 (defun remote-vdt ()
   "Start an SSH session to the remote server 'VDT'."
   (interactive)
   (let* ((vterm-buffer-name (format "*VDT-%s*" (format-time-string "%H%M%S")))
          (default-directory "/sshx:vdt:"))
     (vterm)
+    (rename-buffer vterm-buffer-name)
     (vterm-send-string "zsh\n clear\n")))
 
 (defun remote-vdt-tmux ()
@@ -280,6 +161,7 @@
   (let* ((vterm-buffer-name (format "*CXO-%s*" (format-time-string "%H%M%S")))
          (default-directory "/sshx:cxo:"))
     (vterm)
+    (rename-buffer vterm-buffer-name)
     (vterm-send-string "zsh\n clear\n")))
 
 (defun remote-cxo-tmux ()
@@ -303,26 +185,10 @@
 (defun remote-bsrv-tmux ()
   "Start an SSH-TMUX session to the remote server 'Build Server'."
   (interactive)
-  (let* ((vterm-buffer-name (format "*Build-Server-TMUX-%s*" (format-time-string "%H%M%S"))))
-    (vterm)
-    (rename-buffer vterm-buffer-name)
+  (let* ((new-vterm-buffer-name (format "*Build-Server-TMUX-%s*" (format-time-string "%H%M%S"))))
+    (+vterm/here nil)
+    (rename-buffer new-vterm-buffer-name)
     (vterm-send-string "ssh bsrv\n")
-    (vterm-send-string "tmux a -d\n")))
-
-(defun remote-jh ()
-  "Start an SSH session to the remote server 'Jumphost'."
-  (interactive)
-  (let* ((vterm-buffer-name (format "*JH-%s*" (format-time-string "%H%M%S")))
-         (default-directory "/sshx:jh:"))
-    (vterm)))
-
-(defun remote-jh-tmux ()
-  "Start an SSH-TMUX session to the remote server 'Jumphost'."
-  (interactive)
-  (let* ((vterm-buffer-name (format "*JH-TMUX-%s*" (format-time-string "%H%M%S"))))
-    (vterm)
-    (rename-buffer vterm-buffer-name)
-    (vterm-send-string "ssh jh\n")
     (vterm-send-string "tmux a -d\n")))
 
 (map! :leader
@@ -332,10 +198,17 @@
       :desc "VDT tmux" "V" #'remote-vdt-tmux
       :desc "CXO" "c" #'remote-cxo
       :desc "CXO tmux" "C" #'remote-cxo-tmux
-      :desc "CXO Jump Host" "j" #'remote-jh
-      :desc "CXO Jump Host tmux" "J" #'remote-jh-tmux
       :desc "Build Server" "b" #'remote-bsrv
       :desc "Build Server tmux" "B" #'remote-bsrv-tmux)
+
+;; Python
+;; Disable eglot check and enable flake8 and pylint for python linting
+(after! flycheck
+  (add-hook 'python-mode-hook
+        (lambda ()
+        (setq-local flycheck-disabled-checkers '(eglot))
+        (setq-local flycheck-select-checker 'python-flake8)
+        (flycheck-add-next-checker 'python-flake8 'python-pylint)))
 
 ;; C
 ;; Block auto formatting
@@ -346,28 +219,10 @@
   (setq lsp-file-watch-ignored-directories
         (append lsp-file-watch-ignored-directories
                 '("[/\\\\]build_cache\\'"
-                  "[/\\\\]container\\'"
                   "[/\\\\]repotools\\'"
                   "[/\\\\]flavors\\'"
                   "[/\\\\]tpdgatetools\\'"))))
-;; Cscope
-(use-package! xcscope
-  :config
-  (cscope-setup)
-  (setq cscope-initial-directory "~/repos/proj_swiss_npi"))
-
-(map! :after lsp-ui-peek
-      :map c-mode-map
-      :localleader
-      :desc "Callers List" "c" #'cscope-find-functions-calling-this-function
-      :desc "Callees List" "C" #'cscope-find-called-functions
-      :desc "Index Files" "i" #'cscope-index-files
-      :desc "Find Symbol" "s" #'cscope-find-this-symbol
-      :desc "Find Text" "t" #'cscope-find-this-text-string
-      :desc "Find File" "f" #'cscope-find-this-file
-      :desc "Find References" "D" #'cscope-find-assignments-to-this-symbol
-      :desc "Find Definition" "d" #'cscope-find-global-definition)
-;;clangd
+;; ;;clangd
 (setq lsp-clangd-binary-path "/opt/homebrew/opt/llvm/bin/clangd")
 (setq lsp-clients-clangd-args '("-j=3"
 				"--background-index"
@@ -376,73 +231,49 @@
 				"--header-insertion=never"
 				"--header-insertion-decorators=0"))
 
-;; ;; TMUX
-;; (use-package! tmux-pane
-;;   :config
-;;   (tmux-pane-mode)
-;;   (map! :leader
-;;         (:prefix ("v" . "tmux pane")
-;;           :desc "Open vpane" :nv "o" #'tmux-pane-open-vertical
-;;           :desc "Open hpane" :nv "h" #'tmux-pane-open-horizontal
-;;           :desc "Open hpane" :nv "s" #'tmux-pane-open-horizontal
-;;           :desc "Open vpane" :nv "v" #'tmux-pane-open-vertical
-;;           :desc "Close pane" :nv "c" #'tmux-pane-close
-;;           :desc "Rerun last command" :nv "r" #'tmux-pane-rerun))
-;;   (map! :leader
-;;         (:prefix "t"
-;;           :desc "vpane" :nv "v" #'tmux-pane-toggle-vertical
-;;           :desc "hpane" :nv "h" #'tmux-pane-toggle-horizontal)))
-
-;; Org - Ripped from Harry
-(use-package! org
-  ;; Wrap text at 80 characters for better Git diffs and readability
-  :hook (org-mode . auto-fill-mode)
+;; Org Mode Configuration
+(use-package org
+  :hook (org-mode . auto-fill-mode) ; Wrap text at fill-column
   :config
-  ;; Hide ephasis markers that wrap text (i.e. bold, italics)
-  (setq org-hide-emphasis-markers t)
-  (setq org-tree-slide-heading-emphasis t))
+  (setq org-hide-emphasis-markers t          ; Hide emphasis markers (*bold*, /italic/)
+        org-tree-slide-heading-emphasis t)) ; Highlight slide headings
 
-;; Provides 'org-modern' configuration in place of Doom's (org +pretty)
+;; Org Modern Configuration
 (use-package! org-modern
   :after org
   :config
-  ;; Disable table formatting and star hiding, increase label border
-  (setq org-modern-table nil
-        org-modern-hide-stars nil
-        org-modern-label-border 0.3)
-  ;; Enable org-modern globally
+  (setq org-modern-table nil                 ; Disable table formatting
+        org-modern-hide-stars nil            ; Show org stars
+        org-modern-star '("◉" "○" "●" "◆" "◇" "•")) ; Optional: custom bullets
   (global-org-modern-mode))
 
-;; Org-Roam
+;; Org Tree Slide (Presentation Mode)
 (use-package! org-tree-slide
   :after org
   :config
-  ;; Hide formatting characters, use top-level headings as slides
-  (setq org-tree-slide-skip-outline-level 2)
-  ;; Use the fancy presentation profile, shiny animations!
-  (org-tree-slide-presentation-profile))
+  (setq org-tree-slide-skip-outline-level 2  ; Use top-level headings as slides
+        org-tree-slide-presentation-profile t)) ; Enable fancy presentation
 
-;; Provides configuration for 'org-roam', an Emacs knowledge graph
+;; Org Roam Configuration
 (use-package! org-roam
   :after org
   :config
-  ;; Hide common link types from org-roam graph
-  (setq org-roam-graph-link-hidden-types
-        '("file"
-          "http"
-          "https")))
+  (setq org-roam-graph-link-hidden-types '("file" "http" "https"))) ; Exclude common link types
 
-;; Provides 'websocket', a dependency of 'org-roam-ui'
+;; Org Roam UI Configuration
 (use-package! websocket
-  :after org-roam)
+  :after org-roam) ; Dependency for org-roam-ui
 
-;; Provides 'org-roam-ui' a web frontend for 'org-roam'
 (use-package! org-roam-ui
   :after org-roam
   :config
-  ;; Sync UI theme with Emacs, follow current the buffer, update on save, and
-  ;; open browser on start
-  (setq org-roam-ui-sync-theme t
-        org-roam-ui-follow t
-        org-roam-ui-update-on-save t
-        org-roam-ui-open-on-start t))
+  (setq org-roam-ui-sync-theme t             ; Sync UI theme with Emacs
+        org-roam-ui-follow t                 ; Follow the current buffer
+        org-roam-ui-update-on-save t         ; Update UI on save
+        org-roam-ui-open-on-start t))        ; Open UI in browser on start
+
+;; Org Mermaid (for diagrams)
+(use-package! ob-mermaid
+  :after org
+  :config
+  (add-to-list 'org-babel-load-languages '(mermaid . t))) ; Enable Mermaid for Org Babel

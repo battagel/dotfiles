@@ -50,27 +50,21 @@
 ;(unpin! t)
 
 ;; Custom Packages
-;;
-;;Cscope
-(package! xcscope)
 
-(package! tmux-pane)
+(package! drag-stuff)
 
 ;; GitHub Copilot
 (package! copilot
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 
-;; ;; Python
-;; (package! python-docstring)
-
-;; Smudge
-;;(package! smudge)
-
-
-;; Multi-vterm
-(package! multi-vterm)
-
 ;; Org
 (unpin! org-roam) ; use latest version of org-roam
 (package! org-roam-ui) ; enable org-roam-ui server
 (package! org-modern) ; nicer fontification than doom's +pretty
+
+;; Mermaid
+(package! mermaid-mode) ; Working with mermaid graphs
+(package! ob-mermaid) ; Working with mermaid graphs
+
+;; Jinja2
+(package! jinja2-mode)
