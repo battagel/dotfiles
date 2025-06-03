@@ -202,13 +202,7 @@
       :desc "Build Server tmux" "B" #'remote-bsrv-tmux)
 
 ;; Python
-;; Disable eglot check and enable flake8 and pylint for python linting
-(after! flycheck
-  (add-hook 'python-mode-hook
-        (lambda ()
-        (setq-local flycheck-disabled-checkers '(eglot))
-        (setq-local flycheck-select-checker 'python-flake8)
-        (flycheck-add-next-checker 'python-flake8 'python-pylint)))
+(setq-hook! 'lsp-ui-mode-hook flycheck-checker 'python-pylint)
 
 ;; C
 ;; Block auto formatting
@@ -223,7 +217,7 @@
                   "[/\\\\]flavors\\'"
                   "[/\\\\]tpdgatetools\\'"))))
 ;; ;;clangd
-(setq lsp-clangd-binary-path "/opt/homebrew/opt/llvm/bin/clangd")
+(setq lsp-clangd-binary-path "/opt/homebrew/opt/llvm/bin/clangd clangd-15 -j=8 --malloc-trim --background-index --pch-storage=memory --clang-tidy --header-insertion=iwyu --completion-style=detailed --function-arg-placeholders --fallback-style=llvm")
 (setq lsp-clients-clangd-args '("-j=3"
 				"--background-index"
 				"--clang-tidy"
