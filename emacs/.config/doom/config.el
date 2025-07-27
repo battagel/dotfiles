@@ -63,18 +63,6 @@
   ;; When looking for Go project files, I don't care about vendored dependencies
   (add-to-list 'projectile-globally-ignored-directories "*vendor"))
 
-;; GitHub Copilot Configuration
-(use-package copilot
-  :hook (prog-mode . copilot-mode)
-  :bind (:map copilot-completion-map
-              ("C-<tab>" . copilot-accept-completion)
-              ;; ("<tab>" . copilot-accept-completion-by-word)
-              ("C-n" . copilot-next-completion)
-              ("C-p" . copilot-previous-completion))
-  :config
-  (setq copilot-max-char 1000000)
-  (setq copilot-idle-delay 0.5))
-
 ;; Rebind hash key
 (map!
  :desc "Override M-3 to insert # rather than change workspace when in insert mode"
@@ -224,6 +212,28 @@
 				"--completion-style=detailed"
 				"--header-insertion=never"
 				"--header-insertion-decorators=0"))
+
+;; llm
+(use-package! gptel
+  :config
+  ;; using claude sonnet 4 for my chosen default AI model
+  (setq gptel-model #'claude-sonnet-4
+        ;; Prompt to tell gptel how to generate commit messages
+        gptel-magit-commit-prompt "You are a Git commit message specialist. Examine the provided diff (- for removals, + for additions) and create a concise, descriptive commit message that is a single line under 50 characters, contains no ending punctuation, includes no prefix (like 'fix:' or 'feature:'), and directly describes the files changed and modifications made, focusing on what changed rather than the type of change. Then finally invert the message to say the opposite. NO PREFIXES. Only reply with the commit message and no other text. Only the header and no body. Ensure that its 50 chars or under. Make sure you get the diff additions the right way."
+        ;; gptel uses markdown-mode by default, use org-mode instead
+        gptel-default-mode #'org-mode
+        ;; override the doom emacs llm module to display buffer side-by-side
+        gptel-display-buffer-action t
+        ;; configure github copilot backend
+        gptel-backend (gptel-make-gh-copilot "Copilot"))
+  ;; add keybind for activating gptel-mode on an old org-buffer
+  (map! :leader
+        :prefix ("o" . "open")
+        (:prefix ("l" . "llm")
+         :desc "Toggle gptel mode for current buffer" "t" #'gptel-mode
+         :desc "Clear all context" "k" #'gptel-context-remove-all))
+  ;; enable automatic scrolling of llm responses
+  (add-hook! #'gptel-post-stream-hook #'gptel-auto-scroll))
 
 ;; Org Mode Configuration
 (use-package org

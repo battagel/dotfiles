@@ -53,10 +53,6 @@
 
 (package! drag-stuff)
 
-;; GitHub Copilot
-(package! copilot
-  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
-
 ;; Org
 (unpin! org-roam) ; use latest version of org-roam
 (package! org-roam-ui) ; enable org-roam-ui server
