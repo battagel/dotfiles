@@ -1,3 +1,4 @@
+return
 #################################
 #+-----------------------------+#
 #|         Zsh Config          |#
@@ -13,6 +14,9 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git zsh-autosuggestions python F-Sy-H zsh-completions)
 source $ZSH/oh-my-zsh.sh
+
+# Use brew install bash instead
+export PATH="/opt/homebrew/bin:$PATH"
 
 # Keybindings
 bindkey -e # Use emacs keybindings
@@ -194,3 +198,4 @@ alias kdelpod='kdelete pod'
 alias kdservice='kd service'
 alias kdelservice='kdelete service'
 alias kg='kubectl get '
+export PATH="$HOME/.cargo/bin:$PATH"
